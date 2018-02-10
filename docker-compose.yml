@@ -1,0 +1,11 @@
+version: "2"
+services:
+
+   db:
+      image: postgres
+      mem_limit: 1500m
+      environment:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+      ports:
+        - "5432:5432"
