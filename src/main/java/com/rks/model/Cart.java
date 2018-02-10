@@ -12,16 +12,16 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Cart implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int cartId;
+    @Column(name="cart_id")
+    private Integer cartId;
     private double total;
 
-    @OneToMany(mappedBy="cart")
-    private List<CartDetails> items;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="cart_id", referencedColumnName = "cart_id")
+    private List<CartDetails> cartDetails;
 }

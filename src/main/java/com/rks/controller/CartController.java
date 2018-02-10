@@ -17,7 +17,7 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Cart> getAll(){
         return cartService.findAll();

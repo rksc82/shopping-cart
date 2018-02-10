@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -25,28 +26,29 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    @Autowired
-    private CartDetailsRepository cartDetailsRepository;
-
     public CartDto createCart(CartDto cartDto){
         double total = 0;
         List<CartDetails> cartDetailsList = new ArrayList();
 
         for(CartDetailsDto cartDetailsDto : cartDto.getCartDetailsDtoList()){
+            Product product = productRepository.findOne(cartDetailsDto.getProductId());
+
             CartDetails cartDetails = new CartDetails();
+            cartDetails.setProductId(cartDetailsDto.getProductId());
             cartDetails.setQuantity(cartDetailsDto.getProductQuantity());
 
             cartDetailsList.add(cartDetails);
-           Product product = productRepository.findOne(cartDetailsDto.getProductId());
-           total = total + cartDetailsDto.getProductQuantity() * product.getPrice();
+            total = total + cartDetailsDto.getProductQuantity() * product.getPrice();
 
        }
+
         Cart cart = new Cart();
         cart.setTotal(total);
-        cart.setItems(cartDetailsList);
+        cart.setCartDetails(cartDetailsList);
         int cartId = cartRepository.save(cart).getCartId();
 
         cartDto.setId(cartId);
+        cartDto.setTotal(total);
         return cartDto;
     }
 
