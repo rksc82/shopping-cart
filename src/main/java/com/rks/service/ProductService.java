@@ -1,5 +1,4 @@
-package com.rks.Service;
-
+package com.rks.service;
 
 import com.rks.model.Product;
 import com.rks.repository.ProductRepository;
@@ -25,12 +24,13 @@ public class ProductService {
         products.add(new Product(5,"Leather Shoes5","Men shoes used for winter",10.25, 1200));
         products.add(new Product(6,"Leather Shoes6","Men shoes used for winter",10.25, 1200));
         products.add(new Product(7,"Leather Shoes6","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(8,"Leather Shoes7","Men shoes used for winter",10.25, 1200));
+        products.add(new Product(8,"Leather Shoes7","Men shoes used for winter",10.25, 1200 ));
     }
 
     public void saveInitialBatch(){
         productRepository.save(products);
     }
+
     public List<Product> findAll(){
         return productRepository.findAll();
     }

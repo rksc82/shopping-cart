@@ -1,8 +1,11 @@
 package com.rks.controller;
 
-import com.rks.Service.CartService;
+import com.rks.exceptions.ProductNotFoundException;
+import com.rks.service.CartService;
 import com.rks.dto.CartDto;
+import com.rks.dto.OrderDto;
 import com.rks.model.Cart;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -19,19 +22,31 @@ public class CartController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Cart> getAll(){
+    public List<Cart> getCarts(){
         return cartService.findAll();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/{id}")
+    @ResponseBody
+    public Cart getCartsById(@PathVariable Integer id) throws ProductNotFoundException{
+        return cartService.findById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CartDto createCart(@RequestBody CartDto cartDto){
+    public CartDto createCart(@RequestBody CartDto cartDto) throws ProductNotFoundException{
         return cartService.createCart(cartDto);
     }
 
-//    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, value = "{id}")
-//    @ResponseBody
-//    public CartDto order(@PathVariable String id){
-//        return cartService.order(id);
-//    }
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public CartDto updateCart(@RequestBody CartDto cartDto) throws ProductNotFoundException{
+        return cartService.updateCart(cartDto);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, value = "{id}")
+    @ResponseBody
+    public OrderDto order(@RequestBody OrderDto orderDto, @PathVariable Integer id) throws ProductNotFoundException{
+        return cartService.order(orderDto, id);
+    }
 }

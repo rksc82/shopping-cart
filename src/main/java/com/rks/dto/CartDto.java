@@ -1,6 +1,5 @@
 package com.rks.dto;
 
-import com.rks.model.CartDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,15 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CartDto {
 
-    private int id;
+    private int cartId;
     private List<CartDetailsDto> cartDetailsDtoList;
     private double total;
+
+    public CartDto(int cartId, List<CartDetailsDto> cartDetailsDtos, double total){
+        this.cartId = cartId;
+        this.cartDetailsDtoList = cartDetailsDtos;
+        this.total = total;
+    }
 }
