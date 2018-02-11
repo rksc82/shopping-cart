@@ -27,14 +27,7 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    @Autowired
-    private CartDetailsRepository cartDetailsRepository;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
     private final String IN_PROGRESS = "In Progress";
-    private final String ORDER_PLACED = "Order Placed";
 
     public CartDto createCart(CartDto cartDto) throws ProductNotFoundException{
         double total = 0;
@@ -93,45 +86,5 @@ public class CartService {
         cartRepository.save(new Cart(total, cartDetailsList, IN_PROGRESS));
 
         return new CartDto(cart.getCartId(), cartDto.getCartDetailsDtoList(), total);
-    }
-
-    public OrderDto order(OrderDto orderDto, Integer id) throws ProductNotFoundException{
-
-        Cart cart = cartRepository.findOne(id);
-        List<OrderDetails> orderDetailsList = new ArrayList<>();
-        for (CartDetails cartDetails : cart.getCartDetails()) {
-
-            Product product = productRepository.findOne(cartDetails.getProductId());
-
-            if (product.getQuantity() < cartDetails.getQuantity()) {
-                throw new ProductNotFoundException("Product" + product.getProductName() + " Not in stock:");
-
-            }
-            product.setQuantity(product.getQuantity() - cartDetails.getQuantity());
-            productRepository.save(product);
-
-            OrderDetails orderDetails = new OrderDetails();
-            orderDetails.setProductId(product.getProductId());
-            orderDetails.setQuantity(cartDetails.getQuantity());
-
-            orderDetailsList.add(orderDetails);
-        }
-
-        cart.setCartStatus("OrderDto Place");
-        cartRepository.save(cart);
-
-        CartOrder cartOrder = new CartOrder();
-        cartOrder.setOrderDetails(orderDetailsList);
-        cartOrder.setTotal(cart.getTotal());
-        cartOrder.setAddress(orderDto.getAddress());
-        cartOrder.setContact(orderDto.getContact());
-        cartOrder.setUserFirstName(orderDto.getUserFirstName());
-        cartOrder.setUserLastName(orderDto.getUserLastName());
-        cartOrder.setEmail(orderDto.getEmail());
-
-        orderRepository.save(cartOrder);
-
-        orderDto.setTransactionId(orderRepository.save(cartOrder).getOrderId());
-        return orderDto;
     }
 }

@@ -24,4 +24,9 @@ public class OrderDetails {
     @Column(name = "product_id")
     private Integer productId;
     private Integer quantity;
+
+    public OrderDetails(Integer productId, Integer quantity){
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 }

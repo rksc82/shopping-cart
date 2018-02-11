@@ -6,9 +6,7 @@ import com.rks.exceptions.ProductNotFoundException;
 import com.rks.model.Cart;
 import com.rks.model.CartDetails;
 import com.rks.model.Product;
-import com.rks.repository.CartDetailsRepository;
 import com.rks.repository.CartRepository;
-import com.rks.repository.OrderRepository;
 import com.rks.repository.ProductRepository;
 import javassist.NotFoundException;
 import org.junit.Test;
@@ -17,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.naming.ldap.PagedResultsControl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,12 +29,6 @@ public class CartServiceTest {
 
     @Mock
     private CartRepository cartRepository;
-
-    @Mock
-    private CartDetailsRepository cartDetailsRepository;
-
-    @Mock
-    private OrderRepository orderRepository;
 
     @Mock
     private ProductRepository productRepository;

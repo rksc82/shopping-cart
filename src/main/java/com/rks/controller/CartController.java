@@ -43,10 +43,4 @@ public class CartController {
     public CartDto updateCart(@RequestBody CartDto cartDto) throws ProductNotFoundException{
         return cartService.updateCart(cartDto);
     }
-
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, value = "{id}")
-    @ResponseBody
-    public OrderDto order(@RequestBody OrderDto orderDto, @PathVariable Integer id) throws ProductNotFoundException{
-        return cartService.order(orderDto, id);
-    }
 }

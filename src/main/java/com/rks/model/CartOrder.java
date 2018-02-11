@@ -31,4 +31,16 @@ public class CartOrder {
     private String contact;
     private String email;
     private String createdDate;
+
+    public CartOrder(List<OrderDetails> orderDetails, String userFirstName, String userLastName, String address, String contact, String email, String createdDate, Double total){
+
+        this.orderDetails = orderDetails;
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.address = address;
+        this.contact = contact;
+        this.email = email;
+        this.createdDate = createdDate;
+        this.total = total;
+    }
 }
