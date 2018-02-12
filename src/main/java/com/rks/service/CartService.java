@@ -28,9 +28,6 @@ public class CartService {
     @Autowired
     private CartDetailsRepository cartDetailsRepository;
 
-
-    private final String IN_PROGRESS = "In Progress";
-
     public CartDto createCart(CartDto cartDto) throws NotFoundException {
         double total = 0;
         Optional<Product> product;

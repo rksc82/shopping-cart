@@ -8,9 +8,17 @@ The application provides all the Rest endpoints to create, store and check a sho
 
 ## Usage
 
-In order to run the application from your local computer, please execute `./localBuildAndRun.sh`. It will bring up your Postgres database and the API.
-If running Postgres outside. Update the Postgress url in application. properties and run the application by using 
-./gradlew bootRun
+In order to run the application from your local computer, please execute following commands:
+To bring up all dependencies
+`docker-compose up`
+
+Update the Postgres url in application.properties 
+
+To run the application locally as a container
+`./localBuildAndRun.sh`
+
+Run the application using gradle command
+`./gradlew bootRun`
 
 ## APIs
 
