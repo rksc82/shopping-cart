@@ -48,7 +48,7 @@ public class CartService {
             total += (cartDetailsDto.getProductQuantity() * product.get().getPrice());
        }
 
-        int cartId = cartRepository.save(new Cart(total, cartDetailsList, IN_PROGRESS)).getCartId();
+        int cartId = cartRepository.save(new Cart(total, cartDetailsList)).getCartId();
 
         return new CartDto(cartId, cartDto.getCartDetailsDtoList(), total);
     }
@@ -57,11 +57,11 @@ public class CartService {
         return cartRepository.findAll();
     }
 
-    public CartDto findById(Integer cartId) throws NotFoundException {
+    public CartDto findById(Integer userId) throws NotFoundException {
 
-        Cart cart = cartRepository.findOne(cartId);
+        Cart cart = cartRepository.findByUserId(userId);
         if(cart == null){
-            throw new NotFoundException("Unable to find any cart with id: "+ cartId);
+            throw new NotFoundException("Unable to find any cart with id: "+ userId);
         }
 
         List<CartDetailsDto> cartDetailsDtoList = new ArrayList<>();
@@ -77,12 +77,12 @@ public class CartService {
         return new CartDto(cart.getCartId(), cartDetailsDtoList, cart.getTotal());
     }
 
-    public CartDto updateCart(CartDto cartDto) throws NotFoundException {
+    public CartDto updateCart(CartDto cartDto, int userId) throws NotFoundException {
         double total = 0;
         Product product;
-       Cart cart = cartRepository.findOne(cartDto.getCartId());
+       Cart cart = cartRepository.findByUserId(userId);
         if(cart == null){
-            throw new NotFoundException("Unable to find cart with id: " + cartDto.getCartId());
+            throw new NotFoundException("Unable to find cart with userId: " + userId);
         }
         List<CartDetails> cartDetailsList = new ArrayList();
 

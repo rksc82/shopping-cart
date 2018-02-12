@@ -79,7 +79,7 @@ public class CartControllerTest {
         CartDto cartDto = new CartDto(12, new ArrayList<CartDetailsDto>(), 12);
         when(cartService.createCart(cartDto)).thenReturn(cartDto);
 
-        mvc.perform(put("/carts")
+        mvc.perform(put("/carts/12")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"cartId\": 0,\n" +

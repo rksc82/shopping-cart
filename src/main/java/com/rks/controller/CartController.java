@@ -4,6 +4,7 @@ import com.rks.exceptions.NotFoundException;
 import com.rks.service.CartService;
 import com.rks.dto.CartDto;
 import com.rks.model.Cart;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,11 @@ public class CartController {
         return cartService.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/{id}")
+    @ApiOperation(value = "Query User Cart by UserId", response = CartDto.class, responseContainer = "List")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/{userId}")
     @ResponseBody
-    public CartDto getCartsById(@PathVariable Integer id) throws NotFoundException {
-        return cartService.findById(id);
+    public CartDto getCartByUserId(@PathVariable Integer userId) throws NotFoundException {
+        return cartService.findById(userId);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,9 +38,10 @@ public class CartController {
         return cartService.createCart(cartDto);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update Cart values UserId", response = CartDto.class, responseContainer = "List")
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, value = "/{userId}")
     @ResponseBody
-    public CartDto updateCart(@RequestBody CartDto cartDto) throws NotFoundException {
-        return cartService.updateCart(cartDto);
+    public CartDto updateCartByUserId(@RequestBody CartDto cartDto, @PathVariable int userId) throws NotFoundException {
+        return cartService.updateCart(cartDto ,userId);
     }
 }

@@ -16,16 +16,14 @@ public class ProductService {
 
     private static List<Product> products = new ArrayList<>();
 
-    //initial loading
+    //this is only used for initial loading of data to database which should be moved to database scripts
     static {
-        products.add(new Product(1,"Leather Shoes1","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(2,"Leather Shoes2","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(3,"Leather Shoes3","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(4,"Leather Shoes4","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(5,"Leather Shoes5","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(6,"Leather Shoes6","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(7,"Leather Shoes6","Men shoes used for winter",10.25, 1200));
-        products.add(new Product(8,"Leather Shoes7","Men shoes used for winter",10.25, 1200 ));
+        products.add(new Product(1, "Leather Shoes", "Men shoes used for winter", 10.25, 100));
+        products.add(new Product(2, "Shirt", "Men shirt used for summer", 25.25, 200));
+        products.add(new Product(3, "Bag", "Ladies bag used all time", 24.25, 300));
+        products.add(new Product(4, "Gloves", "Ladies gloves for winter", 53.25, 500));
+        products.add(new Product(5, "Cap", "Men cap used for seasons", 12.25, 400));
+        products.add(new Product(6, "Jeans", "Men denim jeans", 10.25, 600));
     }
 
     public void saveInitialBatch(){

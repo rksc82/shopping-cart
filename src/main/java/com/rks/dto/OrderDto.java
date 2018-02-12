@@ -20,4 +20,5 @@ public class OrderDto {
     private String email;
     private String createdDate;
     private Integer transactionId;
+    private CartDto cartDto;
 }

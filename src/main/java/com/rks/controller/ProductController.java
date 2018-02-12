@@ -2,6 +2,7 @@ package com.rks.controller;
 
 import com.rks.service.ProductService;
 import com.rks.model.Product;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @ApiOperation(value = "Get list of all the products", response = Product.class, responseContainer = "List")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Product> findAll(){

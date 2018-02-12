@@ -1,6 +1,7 @@
 package com.rks.controller;
 
 import com.rks.dto.OrderDto;
+import com.rks.model.CartOrder;
 import com.rks.service.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,22 +27,43 @@ public class OrderControllerTest {
     private OrderService orderService;
 
     @Test
-    public void createOrderTest() throws Exception{
-
+    public void createOrderTestForGuest() throws Exception{
         OrderDto orderDto = new OrderDto();
-        when(orderService.createOrder(orderDto, 12)).thenReturn(orderDto);
+        when(orderService.createOrderForGuest(orderDto)).thenReturn(new CartOrder());
 
-        mvc.perform(post("/orders/12")
+        mvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "  \"userFirstName\": \"string\",\n" +
-                        "  \"userLastName\":Product Not Found \"string\",\n" +
-                        "  \"address\": \"string\",\n" +
-                        "  \"contact\": \"string\",\n" +
-                        "  \"email\": \"string\",\n" +
-                        "  \"createdDate\": \"string\",\n" +
-                        "  \"transactionId\": 0\n" +
+                        "  \"userFirstName\": \"testName\",\n" +
+                        "  \"userLastName\": \"testName\",\n" +
+                        "  \"address\": \"testAddress\",\n" +
+                        "  \"contact\": \"testContact\",\n" +
+                        "  \"email\": \"testEmail\",\n" +
+                        "  \"createdDate\": \"testDate\",\n" +
+                        "  \"transactionId\": 0,\n" +
+                        "  \"cartDto\": {\n" +
+                        "    \"cartDetailsDtoList\": [\n" +
+                        "      {\n" +
+                        "        \"productId\": 0,\n" +
+                        "        \"productQuantity\": 0,\n" +
+                        "        \"productName\": \"testName\",\n" +
+                        "        \"productDescription\": \"testDescription\"\n" +
+                        "      }\n" +
+                        "    ],\n" +
+                        "    \"cartId\": 0,\n" +
+                        "    \"total\": 0\n" +
+                        "  }\n" +
                         "}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createOrderTestForUser() throws Exception{
+        OrderDto orderDto = new OrderDto();
+        when(orderService.createOrderForGuest(orderDto)).thenReturn(new CartOrder());
+
+        mvc.perform(post("/orders/12")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 }

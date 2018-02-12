@@ -12,10 +12,9 @@ public class CartTest {
     @Test
     public void CartTest() {
         CartDetails cartDetails = new CartDetails(12, 12);
-        Cart cart = new Cart(new Double(12), Arrays.asList(cartDetails), "In Progress");
+        Cart cart = new Cart(new Double(12), Arrays.asList(cartDetails));
 
         assertEquals(cart.getTotal(), 12, 0);
-        assertEquals(cart.getCartStatus(), "In Progress");
         assertTrue(cart.getCartDetails().contains(cartDetails));
     }
 }
