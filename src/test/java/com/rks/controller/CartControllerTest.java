@@ -1,10 +1,9 @@
 package com.rks.controller;
 
 import com.rks.dto.CartDetailsDto;
-import com.rks.dto.CartDto;
 
+import com.rks.dto.CartDto;
 import com.rks.model.Cart;
-import com.rks.model.CartDetails;
 import com.rks.service.CartService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +66,7 @@ public class CartControllerTest {
     @Test
     public void getCartsById() throws Exception {
 
-        when(cartService.findById(12)).thenReturn(new Cart(new Double(12), new ArrayList<CartDetails>(), "In Progress"));
+        when(cartService.findById(12)).thenReturn(new CartDto(12, new ArrayList<CartDetailsDto>(), 20d));
 
         mvc.perform(get("/carts/12")
                 .contentType(MediaType.APPLICATION_JSON))

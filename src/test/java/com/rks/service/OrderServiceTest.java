@@ -1,7 +1,7 @@
 package com.rks.service;
 
 import com.rks.dto.OrderDto;
-import com.rks.exceptions.ProductNotFoundException;
+import com.rks.exceptions.NotFoundException;
 import com.rks.model.Cart;
 import com.rks.model.CartDetails;
 import com.rks.model.CartOrder;
@@ -59,7 +59,7 @@ public class OrderServiceTest {
         assertEquals(actual, orderDto);
     }
 
-    @Test(expected = ProductNotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void createCartTest_throwsException() throws Exception{
 
         OrderDto orderDto = new OrderDto("TestUser", "TestUser", "TestAddress", "TestContact","TestEmail","", 12);
@@ -69,7 +69,7 @@ public class OrderServiceTest {
         Cart cart = new Cart(12, new Double(80), Arrays.asList(cartDetails1, cartDetails2), "In Progress");
 
         CartOrder order = new CartOrder();
-        when(productRepository.findOne(anyInt())).thenThrow(new ProductNotFoundException("Product not in stock"));
+        when(productRepository.findOne(anyInt())).thenThrow(new NotFoundException("Product not in stock"));
         when(cartRepository.save(any(Cart.class))).thenReturn(cart);
         when(orderRepository.save(any(CartOrder.class))).thenReturn(order);
         when(cartRepository.findOne(anyInt())).thenReturn(cart);

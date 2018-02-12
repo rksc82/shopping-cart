@@ -12,9 +12,11 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = { "intValue" })
 public class CartDetailsDto implements Serializable {
 
     private int productId;
     private int productQuantity;
+    private String productName;
+    private String productDescription;
+
 }

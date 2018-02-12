@@ -1,7 +1,7 @@
 package com.rks.controller;
 
 import com.rks.dto.OrderDto;
-import com.rks.exceptions.ProductNotFoundException;
+import com.rks.exceptions.NotFoundException;
 import com.rks.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,7 +17,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, value = "{id}")
     @ResponseBody
-    public OrderDto order(@RequestBody OrderDto orderDto, @PathVariable Integer id) throws ProductNotFoundException {
-        return orderService.createOrder(orderDto, id);
+    public OrderDto order(@RequestBody OrderDto orderDto, @PathVariable int cartId) throws NotFoundException {
+        return orderService.createOrder(orderDto, cartId);
     }
 }

@@ -2,13 +2,12 @@ package com.rks.service;
 
 import com.rks.dto.CartDetailsDto;
 import com.rks.dto.CartDto;
-import com.rks.exceptions.ProductNotFoundException;
+import com.rks.exceptions.NotFoundException;
 import com.rks.model.Cart;
 import com.rks.model.CartDetails;
 import com.rks.model.Product;
 import com.rks.repository.CartRepository;
 import com.rks.repository.ProductRepository;
-import javassist.NotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,10 +36,10 @@ public class CartServiceTest {
     private CartService cartService;
 
     @Test
-    public void createCartTest() throws NotFoundException, Exception{
+    public void createCartTest() throws NotFoundException {
 
-        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12);
-        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12);
+        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12, "testName", "testDescription");
+        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12, "testName", "testDescription");
         Cart cart = new Cart(12, new Double(80), new ArrayList<CartDetails>(), "In Progress");
         Product product = new Product(12, "TestProduct", "TestDescription", 56, 64);
 
@@ -54,14 +53,14 @@ public class CartServiceTest {
         assertEquals(actual.getCartDetailsDtoList(), expected.getCartDetailsDtoList());
     }
 
-    @Test(expected = ProductNotFoundException.class)
-    public void createCartTest_throwsNotFoundException() throws NotFoundException{
+    @Test(expected = NotFoundException.class)
+    public void createCartTest_throwsNotFoundException() throws javassist.NotFoundException {
 
-        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12);
-        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12);
+        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12, "testName", "testDescription");
+        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12, "testName", "testDescription");
         Cart cart = new Cart(12, new Double(80), new ArrayList<CartDetails>(), "In Progress");
 
-        when(productRepository.findOne(anyInt())).thenThrow(new ProductNotFoundException("Unable to find Product"));
+        when(productRepository.findOne(anyInt())).thenThrow(new NotFoundException("Unable to find Product"));
         when(cartRepository.save(any(Cart.class))).thenReturn(cart);
 
         CartDto cartDto = new CartDto(1234, Arrays.asList(cartDetailsDto1, cartDetailsDto2), 24 );
@@ -86,25 +85,25 @@ public class CartServiceTest {
         Cart expected = new Cart(12, new Double(80), new ArrayList<CartDetails>(), "In Progress");
 
         when(cartRepository.findOne(12)).thenReturn(expected);
-        Cart actual = cartService.findById(12);
+        CartDto actual = cartService.findById(12);
 
         assertEquals(expected, actual);
     }
 
-    @Test(expected = ProductNotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void findByIdTest_throwsException() {
 
         Cart cart = new Cart(12, new Double(80), new ArrayList<CartDetails>(), "In Progress");
 
-        when(cartRepository.findAll()).thenThrow(new ProductNotFoundException("Unable to find Product with id:" + cart.getCartId()));
+        when(cartRepository.findAll()).thenThrow(new NotFoundException("Unable to find Product with id:" + cart.getCartId()));
         cartService.findAll();
     }
 
     @Test
-    public void updateCartTest() throws ProductNotFoundException{
+    public void updateCartTest() throws NotFoundException {
 
-        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12);
-        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12);
+        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12, "testName", "testDescription");
+        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12, "testName", "testDescription");
         Cart cart = new Cart(12, new Double(80), new ArrayList<CartDetails>(), "In Progress");
         Product product = new Product(12, "TestProduct", "TestDescription", 56, 64);
 
@@ -119,16 +118,16 @@ public class CartServiceTest {
         assertEquals(actual.getCartDetailsDtoList(), expected.getCartDetailsDtoList());
     }
 
-    @Test(expected = ProductNotFoundException.class)
-    public void updateCartTest_throwsProductNotFoundException() throws ProductNotFoundException{
+    @Test(expected = NotFoundException.class)
+    public void updateCartTest_throwsProductNotFoundException() throws NotFoundException {
 
-        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12);
-        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12);
+        CartDetailsDto cartDetailsDto1 = new CartDetailsDto(1234,12, "testName", "testDescription");
+        CartDetailsDto cartDetailsDto2 = new CartDetailsDto(1223,12, "testName", "testDescription");
         Cart cart = new Cart(12, new Double(80), new ArrayList<CartDetails>(), "In Progress");
         Product product = new Product(12, "TestProduct", "TestDescription", 56, 64);
 
         when(cartRepository.findOne(anyInt())).thenReturn(cart);
-        when(productRepository.findOne(anyInt())).thenThrow(new ProductNotFoundException("Product Not Found"));
+        when(productRepository.findOne(anyInt())).thenThrow(new NotFoundException("Product Not Found"));
         when(cartRepository.save(any(Cart.class))).thenReturn(cart);
 
         CartDto expected = new CartDto(12, Arrays.asList(cartDetailsDto1, cartDetailsDto2), 24 );

@@ -1,7 +1,7 @@
 package com.rks.service;
 
 import com.rks.dto.OrderDto;
-import com.rks.exceptions.ProductNotFoundException;
+import com.rks.exceptions.NotFoundException;
 import com.rks.model.*;
 import com.rks.repository.CartRepository;
 import com.rks.repository.OrderRepository;
@@ -26,16 +26,13 @@ public class OrderService {
 
     private final String ORDER_PLACED = "Order Placed";
 
-    public OrderDto createOrder(OrderDto orderDto, Integer id) throws ProductNotFoundException {
-
-        Cart cart = cartRepository.findOne(id);
+    public OrderDto createOrder(OrderDto orderDto, int cartId) throws NotFoundException {
+        Cart cart = cartRepository.findOne(cartId);
         List<OrderDetails> orderDetailsList = new ArrayList<>();
         for (CartDetails cartDetails : cart.getCartDetails()) {
-
             Product product = productRepository.findOne(cartDetails.getProductId());
-
             if (product.getQuantity() < cartDetails.getQuantity()) {
-                throw new ProductNotFoundException("Product" + product.getProductName() + " Not in stock:");
+                throw new NotFoundException("Product" + product.getProductName() + " Not in stock:");
 
             }
             product.setQuantity(product.getQuantity() - cartDetails.getQuantity());
@@ -43,7 +40,6 @@ public class OrderService {
 
             orderDetailsList.add(new OrderDetails(product.getProductId(), cartDetails.getQuantity()));
         }
-
         cart.setCartStatus(ORDER_PLACED);
         cartRepository.save(cart);
 

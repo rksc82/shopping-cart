@@ -1,6 +1,5 @@
 package com.rks.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @AllArgsConstructor
 public class Cart implements Serializable {
 

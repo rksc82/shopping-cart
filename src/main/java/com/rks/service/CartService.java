@@ -2,12 +2,10 @@ package com.rks.service;
 
 import com.rks.dto.CartDetailsDto;
 import com.rks.dto.CartDto;
-import com.rks.dto.OrderDto;
-import com.rks.exceptions.ProductNotFoundException;
+import com.rks.exceptions.NotFoundException;
 import com.rks.model.*;
 import com.rks.repository.CartDetailsRepository;
 import com.rks.repository.CartRepository;
-import com.rks.repository.OrderRepository;
 import com.rks.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,23 +25,26 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private CartDetailsRepository cartDetailsRepository;
+
+
     private final String IN_PROGRESS = "In Progress";
 
-    public CartDto createCart(CartDto cartDto) throws ProductNotFoundException{
+    public CartDto createCart(CartDto cartDto) throws NotFoundException {
         double total = 0;
         Optional<Product> product;
         List<CartDetails> cartDetailsList = new ArrayList();
 
         for(CartDetailsDto cartDetailsDto : cartDto.getCartDetailsDtoList()){
-
             product = Optional.of(productRepository.findOne(cartDetailsDto.getProductId()));
             if(!product.isPresent()){
-                throw new ProductNotFoundException("Unable to find Product with id: " + cartDetailsDto.getProductId());
+                throw new NotFoundException("Unable to find Product with id: " + cartDetailsDto.getProductId());
             }
 
             CartDetails cartDetails = new CartDetails(cartDetailsDto.getProductId(), cartDetailsDto.getProductQuantity());
-
             cartDetailsList.add(cartDetails);
+
             total += (cartDetailsDto.getProductQuantity() * product.get().getPrice());
        }
 
@@ -56,34 +57,56 @@ public class CartService {
         return cartRepository.findAll();
     }
 
-    public Cart findById(Integer id) throws ProductNotFoundException{
-        try {
-          return cartRepository.findOne(id);
-        } catch (Exception e){
-            throw new ProductNotFoundException("Unable to find cart with id: "+id);
+    public CartDto findById(Integer cartId) throws NotFoundException {
+
+        Cart cart = cartRepository.findOne(cartId);
+        if(cart == null){
+            throw new NotFoundException("Unable to find any cart with id: "+ cartId);
         }
+
+        List<CartDetailsDto> cartDetailsDtoList = new ArrayList<>();
+
+        for(CartDetails cartDetails: cart.getCartDetails()) {
+            Product product = productRepository.getOne(cartDetails.getProductId());
+            cartDetailsDtoList.add(new CartDetailsDto(cartDetails.getProductId(),
+                                                      cartDetails.getQuantity(),
+                                                      product.getProductName(),
+                                                      product.getDescription()));
+        }
+
+        return new CartDto(cart.getCartId(), cartDetailsDtoList, cart.getTotal());
     }
 
-    public CartDto updateCart(CartDto cartDto) throws ProductNotFoundException{
+    public CartDto updateCart(CartDto cartDto) throws NotFoundException {
         double total = 0;
-        Product product = new Product();
-        Cart cart = cartRepository.findOne(cartDto.getCartId());
+        Product product;
+       Cart cart = cartRepository.findOne(cartDto.getCartId());
+        if(cart == null){
+            throw new NotFoundException("Unable to find cart with id: " + cartDto.getCartId());
+        }
         List<CartDetails> cartDetailsList = new ArrayList();
 
         for(CartDetailsDto cartDetailsDto : cartDto.getCartDetailsDtoList()){
-
-            try {
-                product = productRepository.findOne(cartDetailsDto.getProductId());
-            } catch (Exception e) {
-                throw new ProductNotFoundException("Unable to find product: " + product.getProductName());
+            product = productRepository.findOne(cartDetailsDto.getProductId());
+            if(product == null) {
+                throw new NotFoundException("Unable to find product: " + product.getProductName());
             }
-            CartDetails cartDetails = new CartDetails(cartDetailsDto.getProductId(), cartDetailsDto.getProductQuantity());
+
+            CartDetails cartDetails = cartDetailsRepository.findByCartIdInAndProductIdIn(cartDto.getCartId(), product.getProductId());
+
+            if(cartDetails != null){
+                cartDetails.setQuantity(cartDetailsDto.getProductQuantity());
+            } else {
+                cartDetails = new CartDetails(product.getProductId(), cartDetailsDto.getProductQuantity());
+            }
 
             cartDetailsList.add(cartDetails);
             total += (cartDetailsDto.getProductQuantity() * product.getPrice());
         }
 
-        cartRepository.save(new Cart(total, cartDetailsList, IN_PROGRESS));
+        cart.setTotal(total);
+        cart.setCartDetails(cartDetailsList);
+        cartRepository.save(cart);
 
         return new CartDto(cart.getCartId(), cartDto.getCartDetailsDtoList(), total);
     }

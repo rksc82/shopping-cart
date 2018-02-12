@@ -1,11 +1,9 @@
 package com.rks.controller;
 
-import com.rks.exceptions.ProductNotFoundException;
+import com.rks.exceptions.NotFoundException;
 import com.rks.service.CartService;
 import com.rks.dto.CartDto;
-import com.rks.dto.OrderDto;
 import com.rks.model.Cart;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -28,19 +26,19 @@ public class CartController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/{id}")
     @ResponseBody
-    public Cart getCartsById(@PathVariable Integer id) throws ProductNotFoundException{
+    public CartDto getCartsById(@PathVariable Integer id) throws NotFoundException {
         return cartService.findById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CartDto createCart(@RequestBody CartDto cartDto) throws ProductNotFoundException{
+    public CartDto createCart(@RequestBody CartDto cartDto) throws NotFoundException {
         return cartService.createCart(cartDto);
     }
 
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CartDto updateCart(@RequestBody CartDto cartDto) throws ProductNotFoundException{
+    public CartDto updateCart(@RequestBody CartDto cartDto) throws NotFoundException {
         return cartService.updateCart(cartDto);
     }
 }

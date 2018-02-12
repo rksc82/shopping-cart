@@ -16,6 +16,7 @@ public class ProductService {
 
     private static List<Product> products = new ArrayList<>();
 
+    //initial loading
     static {
         products.add(new Product(1,"Leather Shoes1","Men shoes used for winter",10.25, 1200));
         products.add(new Product(2,"Leather Shoes2","Men shoes used for winter",10.25, 1200));

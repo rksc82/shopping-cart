@@ -26,7 +26,7 @@ public class OrderControllerTest {
     private OrderService orderService;
 
     @Test
-    public void createCartTest() throws Exception{
+    public void createOrderTest() throws Exception{
 
         OrderDto orderDto = new OrderDto();
         when(orderService.createOrder(orderDto, 12)).thenReturn(orderDto);
@@ -35,7 +35,7 @@ public class OrderControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"userFirstName\": \"string\",\n" +
-                        "  \"userLastName\": \"string\",\n" +
+                        "  \"userLastName\":Product Not Found \"string\",\n" +
                         "  \"address\": \"string\",\n" +
                         "  \"contact\": \"string\",\n" +
                         "  \"email\": \"string\",\n" +
