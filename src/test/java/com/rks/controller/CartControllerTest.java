@@ -1,9 +1,9 @@
 package com.rks.controller;
 
-import com.rks.dto.CartDetailsDto;
+import com.rks.dto.RequestCartDetailsDto;
+import com.rks.dto.ResponseCartDetailsDto;
 
-import com.rks.dto.CartDto;
-import com.rks.model.Cart;
+import com.rks.dto.ResponseCartDto;
 import com.rks.service.CartService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,40 +33,9 @@ public class CartControllerTest {
     @MockBean private CartService cartService;
 
     @Test
-    public void createCartTest() throws Exception{
+    public void getCartsByUserId() throws Exception {
 
-        CartDto cartDto = new CartDto(12, new ArrayList<CartDetailsDto>(), 12);
-        when(cartService.createCart(cartDto)).thenReturn(cartDto);
-
-        mvc.perform(post("/carts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"cartId\": 0,\n" +
-                        "  \"cartDetailsDtoList\": [\n" +
-                        "    {\n" +
-                        "      \"productId\": 0,\n" +
-                        "      \"productQuantity\": 0\n" +
-                        "    }\n" +
-                        "  ],\n" +
-                        "  \"total\": 0\n" +
-                        "}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getCarts() throws Exception {
-
-        when(cartService.findAll()).thenReturn(new ArrayList<Cart>());
-
-        mvc.perform(get("/carts")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getCartsById() throws Exception {
-
-        when(cartService.findById(12)).thenReturn(new CartDto(12, new ArrayList<CartDetailsDto>(), 20d));
+        when(cartService.findByUserId(12)).thenReturn(new ResponseCartDto(new ArrayList<ResponseCartDetailsDto>(), 20d));
 
         mvc.perform(get("/carts/12")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -74,23 +43,19 @@ public class CartControllerTest {
     }
 
     @Test
-    public void updateCartTest() throws Exception{
+    public void updateCartByUserIdTest() throws Exception{
 
-        CartDto cartDto = new CartDto(12, new ArrayList<CartDetailsDto>(), 12);
-        when(cartService.createCart(cartDto)).thenReturn(cartDto);
+        ResponseCartDto responseCartDto = new ResponseCartDto(new ArrayList<ResponseCartDetailsDto>(), 12);
+        when(cartService.updateCartByUserId(new ArrayList<RequestCartDetailsDto>(), 12)).thenReturn(responseCartDto);
 
         mvc.perform(put("/carts/12")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"cartId\": 0,\n" +
-                        "  \"cartDetailsDtoList\": [\n" +
-                        "    {\n" +
-                        "      \"productId\": 0,\n" +
-                        "      \"productQuantity\": 0\n" +
-                        "    }\n" +
-                        "  ],\n" +
-                        "  \"total\": 0\n" +
-                        "}"))
+                .content("[\n" +
+                        "  {\n" +
+                        "    \"productId\": 0,\n" +
+                        "    \"productQuantity\": 0\n" +
+                        "  }\n" +
+                        "]"))
                 .andExpect(status().isOk());
     }
 }

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class UserDetails {
+public class UserDetails implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,6 +1,7 @@
 package com.rks.controller;
 
-import com.rks.dto.UserDto;
+import com.rks.dto.RequestUserDto;
+import com.rks.dto.ResponseUserDto;
 import com.rks.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +30,9 @@ public class UserControllerTest {
     @Test
     public void userCreateTest() throws Exception{
 
-        UserDto userDto = new UserDto();
-        when(userService.createUser(userDto)).thenReturn(userDto);
+        ResponseUserDto responseUserDto = new ResponseUserDto();
+        RequestUserDto requestUserDto = new RequestUserDto();
+        when(userService.createUser(requestUserDto)).thenReturn(responseUserDto);
 
         mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -39,17 +41,18 @@ public class UserControllerTest {
                         "  \"contact\": \"testContact\",\n" +
                         "  \"email\": \"testEmail\",\n" +
                         "  \"userFirstName\": \"testUser\",\n" +
-                        "  \"userId\": 0,\n" +
                         "  \"userLastName\": \"test\"\n" +
                         "}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
     public void userGetAllTest() throws Exception{
 
-        UserDto userDto = new UserDto();
-        when(userService.createUser(userDto)).thenReturn(userDto);
+        ResponseUserDto responseUserDto = new ResponseUserDto();
+        RequestUserDto requestUserDto = new RequestUserDto();
+
+        when(userService.createUser(requestUserDto)).thenReturn(responseUserDto);
 
         mvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))

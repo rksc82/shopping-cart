@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class CartDetails {
+public class CartDetails implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,7 +23,6 @@ public class CartDetails {
     @Column(name = "cart_id")
     private Integer cartId;
 
-    @Column(name = "product_id")
     private Integer productId;
     private Integer quantity;
 

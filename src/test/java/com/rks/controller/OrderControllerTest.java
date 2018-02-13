@@ -1,7 +1,7 @@
 package com.rks.controller;
 
-import com.rks.dto.OrderDto;
-import com.rks.model.CartOrder;
+import com.rks.dto.RequestOrderDto;
+import com.rks.dto.ResponseOrderDto;
 import com.rks.service.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +28,9 @@ public class OrderControllerTest {
 
     @Test
     public void createOrderTestForGuest() throws Exception{
-        OrderDto orderDto = new OrderDto();
-        when(orderService.createOrderForGuest(orderDto)).thenReturn(new CartOrder());
+        RequestOrderDto requestOrderDto = new RequestOrderDto();
+        ResponseOrderDto responseOrderDto = new ResponseOrderDto();
+        when(orderService.createOrderForGuest(requestOrderDto)).thenReturn(responseOrderDto);
 
         mvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -42,7 +43,7 @@ public class OrderControllerTest {
                         "  \"createdDate\": \"testDate\",\n" +
                         "  \"transactionId\": 0,\n" +
                         "  \"cartDto\": {\n" +
-                        "    \"cartDetailsDtoList\": [\n" +
+                        "    \"responseCartDetailsDtoList\": [\n" +
                         "      {\n" +
                         "        \"productId\": 0,\n" +
                         "        \"productQuantity\": 0,\n" +
@@ -59,8 +60,10 @@ public class OrderControllerTest {
 
     @Test
     public void createOrderTestForUser() throws Exception{
-        OrderDto orderDto = new OrderDto();
-        when(orderService.createOrderForGuest(orderDto)).thenReturn(new CartOrder());
+        RequestOrderDto requestOrderDto = new RequestOrderDto();
+        ResponseOrderDto responseOrderDto = new ResponseOrderDto();
+
+        when(orderService.createOrderForGuest(requestOrderDto)).thenReturn(responseOrderDto);
 
         mvc.perform(post("/orders/12")
                 .contentType(MediaType.APPLICATION_JSON))

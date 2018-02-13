@@ -1,6 +1,7 @@
 package com.rks.service;
 
-import com.rks.dto.UserDto;
+import com.rks.dto.RequestUserDto;
+import com.rks.dto.ResponseUserDto;
 import com.rks.model.Cart;
 import com.rks.model.UserDetails;
 import com.rks.repository.UserDetailsRepository;
@@ -30,13 +31,19 @@ public class UserServiceTest {
 
     @Test
     public void createUser(){
-        UserDto expected = new UserDto(12,"TestName" , "TestName", "TestAddress", "TestContact", "TestEmail");
+        RequestUserDto requestUserDto = new RequestUserDto("TestName" , "TestName", "TestAddress", "TestContact", "TestEmail");
+
+        ResponseUserDto expected = new ResponseUserDto(12,"TestName" , "TestName", "TestAddress", "TestContact", "TestEmail");
         UserDetails userDetails = new UserDetails("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", new Cart());
 
         when(userDetailsRepository.save(any(UserDetails.class))).thenReturn(userDetails);
-        UserDto actual = userService.createUser(expected);
+        ResponseUserDto actual = userService.createUser(requestUserDto);
 
-        assertEquals(actual, expected);
+        assertEquals(actual.getUserFirstName(), expected.getUserFirstName());
+        assertEquals(actual.getUserLastName(), expected.getUserLastName());
+        assertEquals(actual.getAddress(), expected.getAddress());
+        assertEquals(actual.getContact(), expected.getContact());
+        assertEquals(actual.getEmail(), expected.getEmail());
     }
 
     @Test

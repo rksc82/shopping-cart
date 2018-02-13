@@ -1,6 +1,7 @@
 package com.rks.service;
 
-import com.rks.dto.UserDto;
+import com.rks.dto.RequestUserDto;
+import com.rks.dto.ResponseUserDto;
 import com.rks.model.Cart;
 import com.rks.model.UserDetails;
 import com.rks.repository.UserDetailsRepository;
@@ -15,20 +16,27 @@ public class UserService {
     @Autowired
     private UserDetailsRepository userDetailsRepository;
 
-    public UserDto createUser(UserDto userDto){
+    private final static int INITIAL_TOTAL = 0;
 
-        UserDetails userDetails = userDetailsRepository.save(new UserDetails(userDto.getUserFirstName(),
-                userDto.getUserLastName(),
-                userDto.getUserFirstName(),
-                userDto.getContact(),
-                userDto.getEmail(),
-                new Cart(new Double(0))));
+    public ResponseUserDto createUser(RequestUserDto requestUserDto){
 
-        userDto.setUserId(userDetails.getUserId());
-        return userDto;
+        UserDetails userDetails = userDetailsRepository.save(new UserDetails(requestUserDto.getUserFirstName(),
+                requestUserDto.getUserLastName(),
+                requestUserDto.getUserFirstName(),
+                requestUserDto.getContact(),
+                requestUserDto.getEmail(),
+                new Cart(new Double(INITIAL_TOTAL))));
+
+        return new ResponseUserDto(userDetails.getUserId(),
+                                   userDetails.getUserFirstName(),
+                                   userDetails.getUserLastName(),
+                                   userDetails.getAddress(),
+                                   userDetails.getContact(),
+                                   userDetails.getEmail());
     }
 
     public List<UserDetails> findAll() {
-        return userDetailsRepository.findAll();
+         List<UserDetails> userDetails = userDetailsRepository.findAll();
+         return userDetails;
     }
 }

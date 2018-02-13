@@ -1,8 +1,11 @@
 package com.rks.service;
 
-import com.rks.dto.CartDetailsDto;
-import com.rks.dto.OrderDto;
+import com.rks.dto.ResponseOrderDetailsDto;
+import com.rks.dto.ResponseOrderDto;
+import com.rks.dto.RequestOrderDetailsDto;
+import com.rks.dto.RequestOrderDto;
 import com.rks.exceptions.NotFoundException;
+import com.rks.exceptions.ShoppingCartException;
 import com.rks.model.*;
 import com.rks.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,68 +32,107 @@ public class OrderService {
     @Autowired
     private UserDetailsRepository userDetailsRepository;
 
-    public CartOrder createOrderForUser(int userId) throws NotFoundException {
-        Cart cart = cartRepository.findOne(userId);
-        UserDetails userDetails = userDetailsRepository.findOne(userId);
-
+    public ResponseOrderDto createOrderForUser(int userId) throws NotFoundException, ShoppingCartException {
         List<OrderDetails> orderDetailsList = new ArrayList<>();
-        for (CartDetails cartDetails : cart.getCartDetails()) {
+        List<ResponseOrderDetailsDto> responseOrderDetailsDtoList = new ArrayList<>();
+
+        UserDetails userDetails = userDetailsRepository.findOne(userId);
+        if(userDetails == null) {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+
+        Cart cart = userDetails.getCart();
+
+        if(cart.getCartDetails().isEmpty()) {
+            throw new ShoppingCartException("Unable to checkout. No items present in the cart.");
+        }
+
+        cart.getCartDetails().forEach(cartDetails -> {
             Product product = productRepository.findOne(cartDetails.getProductId());
             if (product.getQuantity() < cartDetails.getQuantity()) {
                 throw new NotFoundException("Product" + product.getProductName() + " Not in stock:");
             }
+            orderDetailsList.add(new OrderDetails(product.getProductId(), cartDetails.getQuantity()));
+            responseOrderDetailsDtoList.add(new ResponseOrderDetailsDto(product.getProductId(),
+                                                                       cartDetails.getQuantity(),
+                                                                       product.getProductName(),
+                                                                       product.getDescription(),
+                                                                       product.getPrice()));
+
             product.setQuantity(product.getQuantity() - cartDetails.getQuantity());
             productRepository.save(product);
+        });
 
-            orderDetailsList.add(new OrderDetails(product.getProductId(), cartDetails.getQuantity()));
-        }
-
-        CartOrder cartOrder = new CartOrder(orderDetailsList,
+        CartOrder order = orderRepository.save(new CartOrder(orderDetailsList,
                                             userDetails.getUserFirstName(),
                                             userDetails.getUserLastName(),
                                             userDetails.getAddress(),
                                             userDetails.getContact(),
                                             userDetails.getEmail(),
                                             LocalDateTime.now().toString(),
-                                            cart.getTotal());
+                                            cart.getTotal()));
 
-        cart.setTotal(0d);
-        cart.setCartDetails(new ArrayList<CartDetails>());
-        cartRepository.save(cart);
+        cartRepository.save(cart.setTotal(0d).setCartDetails(new ArrayList<>()));
 
-        return cartOrder;
+        return new ResponseOrderDto(order.getOrderId(),
+                                    order.getTotal(),
+                                    responseOrderDetailsDtoList,
+                                    order.getUserFirstName(),
+                                    order.getUserLastName(),
+                                    order.getAddress(),
+                                    order.getContact(),
+                                    order.getEmail(),
+                                    order.getCreatedDate());
     }
 
-    public CartOrder createOrderForGuest(OrderDto orderDto) throws NotFoundException {
+    public ResponseOrderDto createOrderForGuest(RequestOrderDto requestOrderDto) throws NotFoundException, ShoppingCartException {
         double total = 0;
         List<OrderDetails> orderDetailsList = new ArrayList<>();
+        List<ResponseOrderDetailsDto> items = new ArrayList<>();
 
-        for (CartDetailsDto cartDetails : orderDto.getCartDto().getCartDetailsDtoList()) {
-            Product product = productRepository.findOne(cartDetails.getProductId());
+        if(requestOrderDto.getItems().isEmpty()){
+            throw new ShoppingCartException("Unable to checkout. No items present in the cart.");
+        }
+
+        for (RequestOrderDetailsDto requestOrderDetailsDto : requestOrderDto.getItems()) {
+            Product product = productRepository.findOne(requestOrderDetailsDto.getProductId());
             if(product == null) {
-                throw new NotFoundException("Product Not Found with id: " + cartDetails.getProductId());
+                throw new NotFoundException("Product Not Found with id: " + requestOrderDetailsDto.getProductId());
             }
 
-            if (product.getQuantity() < cartDetails.getProductQuantity()) {
+            if (product.getQuantity() < requestOrderDetailsDto.getProductQuantity()) {
                 throw new NotFoundException("Product" + product.getProductName() + " Not in stock:");
 
             }
-            product.setQuantity(product.getQuantity() - cartDetails.getProductQuantity());
+            product.setQuantity(product.getQuantity() - requestOrderDetailsDto.getProductQuantity());
             productRepository.save(product);
 
-            orderDetailsList.add(new OrderDetails(product.getProductId(), cartDetails.getProductQuantity()));
-            total += (cartDetails.getProductQuantity() * product.getPrice());
+            orderDetailsList.add(new OrderDetails(product.getProductId(), requestOrderDetailsDto.getProductQuantity()));
+            items.add(new ResponseOrderDetailsDto(product.getProductId(),
+                                                  requestOrderDetailsDto.getProductQuantity(),
+                                                  product.getProductName(),
+                                                  product.getDescription(),
+                                                  product.getPrice()));
+            total += (requestOrderDetailsDto.getProductQuantity() * product.getPrice());
         }
 
         CartOrder cartOrder = new CartOrder(orderDetailsList,
-                                            orderDto.getUserFirstName(),
-                                            orderDto.getUserLastName(),
-                                            orderDto.getAddress(),
-                                            orderDto.getContact(),
-                                            orderDto.getEmail(),
-                                            "12",
+                                            requestOrderDto.getUserFirstName(),
+                                            requestOrderDto.getUserLastName(),
+                                            requestOrderDto.getAddress(),
+                                            requestOrderDto.getContact(),
+                                            requestOrderDto.getEmail(),
+                                            LocalDateTime.now().toString(),
                                             total);
-
-        return orderRepository.save(cartOrder);
+        CartOrder order = orderRepository.save(cartOrder);
+        return new ResponseOrderDto(order.getOrderId(),
+                order.getTotal(),
+                items,
+                order.getUserFirstName(),
+                order.getUserLastName(),
+                order.getAddress(),
+                order.getContact(),
+                order.getEmail(),
+                order.getCreatedDate());
     }
 }

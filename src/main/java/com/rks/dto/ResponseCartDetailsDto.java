@@ -9,10 +9,8 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CartDetailsDto implements Serializable {
-
+public class ResponseCartDetailsDto implements Serializable {
     private int productId;
     private int productQuantity;
     private String productName;
