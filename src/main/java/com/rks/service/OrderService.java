@@ -30,7 +30,7 @@ public class OrderService {
     private UserDetailsRepository userDetailsRepository;
 
     public CartOrder createOrderForUser(int userId) throws NotFoundException {
-        Cart cart = cartRepository.findByUserId(userId);
+        Cart cart = cartRepository.findOne(userId);
         UserDetails userDetails = userDetailsRepository.findOne(userId);
 
         List<OrderDetails> orderDetailsList = new ArrayList<>();

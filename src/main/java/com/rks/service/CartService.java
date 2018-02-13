@@ -7,6 +7,7 @@ import com.rks.model.*;
 import com.rks.repository.CartDetailsRepository;
 import com.rks.repository.CartRepository;
 import com.rks.repository.ProductRepository;
+import com.rks.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,10 @@ public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private UserDetailsRepository userRepository;
+
 
     @Autowired
     private CartDetailsRepository cartDetailsRepository;
@@ -54,21 +59,24 @@ public class CartService {
         return cartRepository.findAll();
     }
 
-    public CartDto findById(Integer userId) throws NotFoundException {
+    public CartDto findByUserId(Integer userId) throws NotFoundException {
 
-        Cart cart = cartRepository.findByUserId(userId);
-        if(cart == null){
-            throw new NotFoundException("Unable to find any cart with id: "+ userId);
+        UserDetails user = userRepository.findOne(userId);
+        if(user == null){
+            throw new NotFoundException("Unable to find user with userId: "+ userId);
         }
+        Cart cart = user.getCart();
 
         List<CartDetailsDto> cartDetailsDtoList = new ArrayList<>();
 
-        for(CartDetails cartDetails: cart.getCartDetails()) {
-            Product product = productRepository.getOne(cartDetails.getProductId());
-            cartDetailsDtoList.add(new CartDetailsDto(cartDetails.getProductId(),
-                                                      cartDetails.getQuantity(),
-                                                      product.getProductName(),
-                                                      product.getDescription()));
+        if(!cart.getCartDetails().isEmpty()) {
+            for(CartDetails cartDetails: cart.getCartDetails()) {
+                Product product = productRepository.getOne(cartDetails.getProductId());
+                cartDetailsDtoList.add(new CartDetailsDto(cartDetails.getProductId(),
+                        cartDetails.getQuantity(),
+                        product.getProductName(),
+                        product.getDescription()));
+            }
         }
 
         return new CartDto(cart.getCartId(), cartDetailsDtoList, cart.getTotal());
@@ -77,7 +85,7 @@ public class CartService {
     public CartDto updateCart(CartDto cartDto, int userId) throws NotFoundException {
         double total = 0;
         Product product;
-       Cart cart = cartRepository.findByUserId(userId);
+       Cart cart = cartRepository.findOne(userId);
         if(cart == null){
             throw new NotFoundException("Unable to find cart with userId: " + userId);
         }

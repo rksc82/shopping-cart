@@ -1,5 +1,6 @@
 package com.rks.model;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,15 +23,19 @@ public class Cart implements Serializable {
     private Integer cartId;
     private Double total;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="cart_id", referencedColumnName = "cart_id")
     private List<CartDetails> cartDetails;
 
+    @OneToOne(mappedBy = "cart")
+    private UserDetails userDetails;
+
     public Cart(Double total, List<CartDetails>cartDetails){
         this.total = total;
         this.cartDetails = cartDetails;
+    }
+
+    public Cart(Double total){
+        this.total = total;
     }
 }

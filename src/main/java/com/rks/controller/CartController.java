@@ -29,7 +29,7 @@ public class CartController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/{userId}")
     @ResponseBody
     public CartDto getCartByUserId(@PathVariable Integer userId) throws NotFoundException {
-        return cartService.findById(userId);
+        return cartService.findByUserId(userId);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

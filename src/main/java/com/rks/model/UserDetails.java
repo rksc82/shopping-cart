@@ -26,9 +26,9 @@ public class UserDetails {
     private String contact;
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private List<Cart> cart;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     public UserDetails(String userFirstName, String userLastName, String address, String contact, String email, Cart cart) {
         this.userFirstName = userFirstName;
@@ -36,6 +36,6 @@ public class UserDetails {
         this.address = address;
         this.contact = contact;
         this.email = email;
-        this.cart = Arrays.asList(cart);
+        this.cart = cart;
     }
 }

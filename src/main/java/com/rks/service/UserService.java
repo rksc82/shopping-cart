@@ -22,7 +22,7 @@ public class UserService {
                 userDto.getUserFirstName(),
                 userDto.getContact(),
                 userDto.getEmail(),
-                new Cart()));
+                new Cart(new Double(0))));
 
         userDto.setUserId(userDetails.getUserId());
         return userDto;
