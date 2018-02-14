@@ -9,9 +9,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class Application {
 
     public static void main(String[] args) {
-
         ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);
 
+        //initial data load of products
         ProductService productService = applicationContext.getBean(ProductService.class);
         productService.saveInitialBatch();
     }

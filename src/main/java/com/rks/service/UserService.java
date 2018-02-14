@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -35,8 +36,16 @@ public class UserService {
                                    userDetails.getEmail());
     }
 
-    public List<UserDetails> findAll() {
+    public List<ResponseUserDto> findAll() {
          List<UserDetails> userDetails = userDetailsRepository.findAll();
-         return userDetails;
+
+        return userDetails.stream()
+                .map(user -> new ResponseUserDto(user.getUserId(),
+                                                 user.getUserFirstName(),
+                                                 user.getUserLastName(),
+                                                 user.getAddress(),
+                                                 user.getContact(),
+                                                 user.getEmail()))
+                .collect(Collectors.toList());
     }
 }

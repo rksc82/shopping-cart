@@ -4,6 +4,7 @@ import com.rks.dto.RequestCartDetailsDto;
 import com.rks.dto.ResponseCartDetailsDto;
 import com.rks.dto.ResponseCartDto;
 import com.rks.exceptions.NotFoundException;
+import com.rks.exceptions.ShoppingCartException;
 import com.rks.model.*;
 import com.rks.repository.CartRepository;
 import com.rks.repository.ProductRepository;
@@ -61,13 +62,14 @@ public class CartService {
 
         Cart cart = user.getCart();
 
-        for(RequestCartDetailsDto requestCartDetailsDto : requestCartDetailsDtoList){
+        for(RequestCartDetailsDto requestCartDetailsDto : requestCartDetailsDtoList) {
             Product product = productRepository.findOne(requestCartDetailsDto.getProductId());
-            if(product == null) {
+            if (product == null) {
                 throw new NotFoundException("Unable to find product: " + requestCartDetailsDto.getProductId());
             }
 
             cartDetailsList.add(new CartDetails(product.getProductId(), requestCartDetailsDto.getProductQuantity()));
+        
             responseCartDetailsDtoList.add(new ResponseCartDetailsDto(product.getProductId(),
                                                                       requestCartDetailsDto.getProductQuantity(),
                                                                       product.getProductName(),

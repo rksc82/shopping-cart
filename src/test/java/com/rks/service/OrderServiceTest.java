@@ -142,6 +142,28 @@ public class OrderServiceTest {
         assertEquals(actual.getEmail(), expected.getEmail());
     }
 
+    @Test(expected = ShoppingCartException.class)
+    public void createOrderForGuestTest_throwsShoppingCartException() throws Exception{
+        RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 0);
+
+        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "", Arrays.asList(requestOrderDetailsDto));
+
+        CartDetails cartDetails1 = new CartDetails(12,0);
+        Cart cart = new Cart(12, new Double(80), Arrays.asList(cartDetails1), new UserDetails());
+
+        Product product = new Product(12, "TestProduct", "TestDescription", 56, 64);
+        UserDetails userDetails = new UserDetails("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", new Cart());
+        OrderDetails orderDetails1 = new OrderDetails(12, 0);
+        CartOrder expected = new CartOrder(Arrays.asList(orderDetails1), "TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "12", new Double(12));
+
+        when(productRepository.findOne(anyInt())).thenReturn(product);
+        when(cartRepository.save(any(Cart.class))).thenReturn(cart);
+        when(orderRepository.save(any(CartOrder.class))).thenReturn(expected);
+        when(userDetailsRepository.findOne(anyInt())).thenReturn(userDetails);
+
+        orderService.createOrderForGuest(requestOrderDto);
+    }
+
     @Test(expected = NotFoundException.class)
     public void createOrderForGuestTest_throwsNotFoundException() throws Exception {
         RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 14);

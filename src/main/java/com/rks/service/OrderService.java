@@ -52,12 +52,16 @@ public class OrderService {
             if (product.getQuantity() < cartDetails.getQuantity()) {
                 throw new NotFoundException("Product" + product.getProductName() + " Not in stock:");
             }
-            orderDetailsList.add(new OrderDetails(product.getProductId(), cartDetails.getQuantity()));
-            responseOrderDetailsDtoList.add(new ResponseOrderDetailsDto(product.getProductId(),
-                                                                       cartDetails.getQuantity(),
-                                                                       product.getProductName(),
-                                                                       product.getDescription(),
-                                                                       product.getPrice()));
+
+            if(cartDetails.getQuantity() != 0) {
+                orderDetailsList.add(new OrderDetails(product.getProductId(), cartDetails.getQuantity()));
+
+                responseOrderDetailsDtoList.add(new ResponseOrderDetailsDto(product.getProductId(),
+                        cartDetails.getQuantity(),
+                        product.getProductName(),
+                        product.getDescription(),
+                        product.getPrice()));
+            }
 
             product.setQuantity(product.getQuantity() - cartDetails.getQuantity());
             productRepository.save(product);
@@ -72,7 +76,9 @@ public class OrderService {
                                             LocalDateTime.now().toString(),
                                             cart.getTotal()));
 
-        cartRepository.save(cart.setTotal(0d).setCartDetails(new ArrayList<>()));
+        cart.setTotal(0d);
+        cart.setCartDetails(new ArrayList<>());
+        cartRepository.save(cart);
 
         return new ResponseOrderDto(order.getOrderId(),
                                     order.getTotal(),
@@ -107,13 +113,20 @@ public class OrderService {
             product.setQuantity(product.getQuantity() - requestOrderDetailsDto.getProductQuantity());
             productRepository.save(product);
 
-            orderDetailsList.add(new OrderDetails(product.getProductId(), requestOrderDetailsDto.getProductQuantity()));
-            items.add(new ResponseOrderDetailsDto(product.getProductId(),
-                                                  requestOrderDetailsDto.getProductQuantity(),
-                                                  product.getProductName(),
-                                                  product.getDescription(),
-                                                  product.getPrice()));
+            if(requestOrderDetailsDto.getProductQuantity() != 0) {
+                orderDetailsList.add(new OrderDetails(product.getProductId(), requestOrderDetailsDto.getProductQuantity()));
+                items.add(new ResponseOrderDetailsDto(product.getProductId(),
+                        requestOrderDetailsDto.getProductQuantity(),
+                        product.getProductName(),
+                        product.getDescription(),
+                        product.getPrice()));
+            }
+
             total += (requestOrderDetailsDto.getProductQuantity() * product.getPrice());
+        }
+
+        if(total == 0){
+            throw new ShoppingCartException("Unable to checkout. No items present in the cart.");
         }
 
         CartOrder cartOrder = new CartOrder(orderDetailsList,

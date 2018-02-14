@@ -31,7 +31,7 @@ public class UserController {
     @ApiOperation(value = "Get list of all users", response = UserDetails.class, responseContainer = "List")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<UserDetails> getAllUsers() {
+    public List<ResponseUserDto> getAllUsers() {
         return userService.findAll();
     }
 }

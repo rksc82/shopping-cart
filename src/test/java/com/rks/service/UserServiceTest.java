@@ -48,11 +48,16 @@ public class UserServiceTest {
 
     @Test
     public void getAllUsers(){
-        UserDetails userDetails = new UserDetails("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", new Cart());
+        UserDetails userDetails = new UserDetails(12,"TestName", "TestName", "TestAddress", "TestContact", "TestEmail", new Cart());
+        ResponseUserDto expected = new ResponseUserDto(12,"TestName", "TestName", "TestAddress", "TestContact", "TestEmail");
 
         when(userDetailsRepository.findAll()).thenReturn(Arrays.asList(userDetails));
-        List<UserDetails> actual = userService.findAll();
+        List<ResponseUserDto> actual = userService.findAll();
 
-        assertTrue(actual.contains(userDetails));
+        assertEquals(actual.get(0).getUserFirstName(), expected.getUserFirstName());
+        assertEquals(actual.get(0).getUserLastName(), expected.getUserFirstName());
+        assertEquals(actual.get(0).getEmail(), expected.getEmail());
+        assertEquals(actual.get(0).getContact(), expected.getContact());
+        assertEquals(actual.get(0).getAddress(), expected.getAddress());
     }
 }
