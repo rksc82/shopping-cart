@@ -8,7 +8,6 @@ public class ProductTest {
 
     @Test
     public void productTest() {
-
         Product product = new Product(12, "TestName", "TestDescription", 20d, 30);
 
         assertEquals(product.getProductId(), 12);

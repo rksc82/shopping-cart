@@ -24,7 +24,6 @@ public class ProductServiceTest {
 
     @Test
     public void findAllTest() {
-
         Product product = new Product(12, "Test", "Description", 24d, 12);
 
         when(productRepository.findAll()).thenReturn(Arrays.asList(product));

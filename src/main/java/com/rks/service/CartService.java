@@ -4,7 +4,6 @@ import com.rks.dto.RequestCartDetailsDto;
 import com.rks.dto.ResponseCartDetailsDto;
 import com.rks.dto.ResponseCartDto;
 import com.rks.exceptions.NotFoundException;
-import com.rks.exceptions.ShoppingCartException;
 import com.rks.model.*;
 import com.rks.repository.CartRepository;
 import com.rks.repository.ProductRepository;
@@ -69,7 +68,7 @@ public class CartService {
             }
 
             cartDetailsList.add(new CartDetails(product.getProductId(), requestCartDetailsDto.getProductQuantity()));
-        
+
             responseCartDetailsDtoList.add(new ResponseCartDetailsDto(product.getProductId(),
                                                                       requestCartDetailsDto.getProductQuantity(),
                                                                       product.getProductName(),

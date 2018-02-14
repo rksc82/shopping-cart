@@ -115,7 +115,6 @@ public class OrderServiceTest {
     @Test
     public void createOrderForGuestTest() throws Exception{
         RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 14);
-
         RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "", Arrays.asList(requestOrderDetailsDto));
 
         CartDetails cartDetails1 = new CartDetails(12,12);
@@ -124,6 +123,7 @@ public class OrderServiceTest {
 
         Product product = new Product(12, "TestProduct", "TestDescription", 56, 64);
         UserDetails userDetails = new UserDetails("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", new Cart());
+
         OrderDetails orderDetails1 = new OrderDetails(12, 12);
         OrderDetails orderDetails2 = new OrderDetails(24, 25);
         CartOrder expected = new CartOrder(Arrays.asList(orderDetails1, orderDetails2), "TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "12", new Double(12));
@@ -168,9 +168,11 @@ public class OrderServiceTest {
     public void createOrderForGuestTest_throwsNotFoundException() throws Exception {
         RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 14);
         RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "", Arrays.asList(requestOrderDetailsDto));
+
         CartDetails cartDetails1 = new CartDetails(12,12);
         CartDetails cartDetails2 = new CartDetails(24,25);
         Cart cart = new Cart(12, new Double(80), Arrays.asList(cartDetails1, cartDetails2), new UserDetails());
+
         UserDetails userDetails = new UserDetails("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", new Cart());
         OrderDetails orderDetails1 = new OrderDetails(12, 12);
         OrderDetails orderDetails2 = new OrderDetails(24, 25);

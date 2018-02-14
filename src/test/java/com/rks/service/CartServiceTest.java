@@ -54,14 +54,12 @@ public class CartServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void findByUserIdTest_throwsException() {
-
         when(userDetailsRepository.findOne(12)).thenReturn(null);
         cartService.findByUserId(12);
     }
 
     @Test
     public void updateCartByUserIdTest() throws NotFoundException {
-
         ResponseCartDetailsDto responseCartDetailsDto1 = new ResponseCartDetailsDto(1234,12, "testName", "testDescription");
         ResponseCartDetailsDto responseCartDetailsDto2 = new ResponseCartDetailsDto(1223,12, "testName", "testDescription");
 
@@ -84,7 +82,6 @@ public class CartServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void updateCartTest_throwsProductNotFoundException() throws NotFoundException {
-
         Cart cart = new Cart(12, new Double(80),Arrays.asList(), new UserDetails());
 
         when(userDetailsRepository.findOne(anyInt())).thenReturn(null);
@@ -98,7 +95,6 @@ public class CartServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void updateCartTest_throwsUserNotFoundException() throws NotFoundException {
-
         Cart cart = new Cart(12, new Double(80),Arrays.asList(), new UserDetails());
 
         when(userDetailsRepository.findOne(anyInt())).thenReturn(new UserDetails());
