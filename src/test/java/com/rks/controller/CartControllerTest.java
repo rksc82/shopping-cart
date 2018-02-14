@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +33,6 @@ public class CartControllerTest {
 
     @Test
     public void getCartsByUserId() throws Exception {
-
         when(cartService.findByUserId(12)).thenReturn(new ResponseCartDto(new ArrayList<ResponseCartDetailsDto>(), 20d));
 
         mvc.perform(get("/carts/12")

@@ -29,7 +29,6 @@ public class ProductControllerTest {
 
     @Test
     public void getCarts() throws Exception {
-
         when(productService.findAll()).thenReturn(new ArrayList<Product>());
 
         mvc.perform(get("/products")

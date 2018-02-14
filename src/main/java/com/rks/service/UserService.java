@@ -23,7 +23,7 @@ public class UserService {
 
         UserDetails userDetails = userDetailsRepository.save(new UserDetails(requestUserDto.getUserFirstName(),
                 requestUserDto.getUserLastName(),
-                requestUserDto.getUserFirstName(),
+                requestUserDto.getAddress(),
                 requestUserDto.getContact(),
                 requestUserDto.getEmail(),
                 new Cart(new Double(INITIAL_TOTAL))));

@@ -29,7 +29,6 @@ public class UserControllerTest {
 
     @Test
     public void userCreateTest() throws Exception{
-
         ResponseUserDto responseUserDto = new ResponseUserDto();
         RequestUserDto requestUserDto = new RequestUserDto();
         when(userService.createUser(requestUserDto)).thenReturn(responseUserDto);
@@ -48,7 +47,6 @@ public class UserControllerTest {
 
     @Test
     public void userGetAllTest() throws Exception{
-
         ResponseUserDto responseUserDto = new ResponseUserDto();
         RequestUserDto requestUserDto = new RequestUserDto();
 

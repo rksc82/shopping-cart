@@ -11,7 +11,6 @@ public class ResponseCartDtoTest {
 
     @Test
     public void CartDtoTest(){
-
         ResponseCartDetailsDto responseCartDetailsDto = new ResponseCartDetailsDto(12,12, "Testname", "TestDescription");
         ResponseCartDto responseCartDto = new ResponseCartDto(Arrays.asList(responseCartDetailsDto), 12d);
 
