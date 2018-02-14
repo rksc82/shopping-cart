@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -22,7 +22,6 @@ public class UserController {
 
     @ApiOperation(value = "Create user", response = ResponseUserDto.class, responseContainer = "List")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseUserDto createUser(@RequestBody RequestUserDto requestUserDto) {
         return userService.createUser(requestUserDto);
@@ -30,7 +29,6 @@ public class UserController {
 
     @ApiOperation(value = "Get list of all users", response = UserDetails.class, responseContainer = "List")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public List<ResponseUserDto> getAllUsers() {
         return userService.findAll();
     }

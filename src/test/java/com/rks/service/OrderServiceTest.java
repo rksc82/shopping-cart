@@ -115,7 +115,7 @@ public class OrderServiceTest {
     @Test
     public void createOrderForGuestTest() throws Exception{
         RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 14);
-        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "", Arrays.asList(requestOrderDetailsDto));
+        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", Arrays.asList(requestOrderDetailsDto));
 
         CartDetails cartDetails1 = new CartDetails(12,12);
         CartDetails cartDetails2 = new CartDetails(24,25);
@@ -146,7 +146,7 @@ public class OrderServiceTest {
     public void createOrderForGuestTest_throwsShoppingCartException() throws Exception{
         RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 0);
 
-        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "", Arrays.asList(requestOrderDetailsDto));
+        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", Arrays.asList(requestOrderDetailsDto));
 
         CartDetails cartDetails1 = new CartDetails(12,0);
         Cart cart = new Cart(12, new Double(80), Arrays.asList(cartDetails1), new UserDetails());
@@ -167,7 +167,7 @@ public class OrderServiceTest {
     @Test(expected = NotFoundException.class)
     public void createOrderForGuestTest_throwsNotFoundException() throws Exception {
         RequestOrderDetailsDto requestOrderDetailsDto = new RequestOrderDetailsDto(12, 14);
-        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", "", Arrays.asList(requestOrderDetailsDto));
+        RequestOrderDto requestOrderDto = new RequestOrderDto("TestName", "TestName", "TestAddress", "TestContact", "TestEmail", Arrays.asList(requestOrderDetailsDto));
 
         CartDetails cartDetails1 = new CartDetails(12,12);
         CartDetails cartDetails2 = new CartDetails(24,25);

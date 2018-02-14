@@ -17,6 +17,5 @@ public class RequestOrderDto {
     private String address;
     private String contact;
     private String email;
-    private String createdDate;
     private List<RequestOrderDetailsDto> items;
 }
