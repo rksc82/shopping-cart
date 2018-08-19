@@ -26,3 +26,4 @@ Run the application using gradle command
 * **User APIs** - It gives endpoints to create and view all the users.
 * **Cart APIs** - It gives endpoint to update and view cart by userId.
 * **Order APIs** - It gives endpoint to place an order from the carts for a guest or a user.
+
